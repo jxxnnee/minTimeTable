@@ -1,0 +1,6 @@
+framework module Pods_minTimeTable {
+  umbrella header "Pods-minTimeTable-umbrella.h"
+
+  export *
+  module * { export * }
+}
