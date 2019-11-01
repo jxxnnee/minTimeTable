@@ -18,14 +18,7 @@ class ViewModel {
                    "Content-Type": "application/json"]
     let userKEY = "83fc39b7b33cb7f1af005a63642be65b"
     
-    var lectures = [String]()
-    var lectureCode = [String]()
-    var professors = [String]()
-    var locations = [String]()
-    var startTimes = [String]()
-    var endTimes = [String]()
-    var dayofweeks = [[String]]()
-    var lectureCount = 0
+    
     
     
     // 이름을 기준으로 모든 강좌를 가져오는 함수
@@ -57,42 +50,7 @@ class ViewModel {
         }
     }
     
-    // 모든 강좌를 가져오는 함수
-    func getLectures() {
-        guard let url = URL(string: strURL + "/lectures")
-            else {return}
-        
-        
-        Alamofire.request(url, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON {
-            (response) in
-            
-            if response.result.isSuccess {
-                
-                guard let data = response.data else {return}
-                
-                do {
-                    let lecture = try JSONDecoder().decode(Lectures.self, from: data)
-                    
-                    for item in lecture.Items {
-                        self.lectures.append(item.lecture)
-                        self.lectureCode.append(item.code)
-                        self.professors.append(item.professor)
-                        self.locations.append(item.location)
-                        self.startTimes.append(item.start_time)
-                        self.endTimes.append(item.end_time)
-                        self.dayofweeks.append(item.dayofweek)
-                        print("API 호출 중....")
-                    }
-                    self.lectureCount = lecture.Count
-                    print("API 호출 완료!!")
-                }
-                catch let error {
-                    print("ERROR: \(error)")
-                    
-                }
-            }
-        }
-    }
+    
     
     // 등록한 모든 시간표를 가져오는 함수
     func getTimeTable(_ userkey: String) {
@@ -233,44 +191,46 @@ class ViewModel {
         
     }
     
-    struct Lectures: Decodable {
-        var Items: [Lecture]
-        var Count: Int
-        var ScannedCount: Int
-    }
     
-    struct Lecture: Decodable {
-        var code: String
-        var lecture: String
-        var professor: String
-        var location: String
-        var start_time: String
-        var end_time: String
-        var dayofweek: [String]
-    }
-    
-    struct TimeTables: Decodable {
-        var Items: [TimeTable]
-        var Count: Int
-        var ScannedCount: Int
-    }
-    
-    struct TimeTable: Decodable {
-        var lecture_code: String
-    }
-    
-    struct Memos: Decodable {
-        var Items: [Memo]
-        var Count: Int
-        var ScannedCount: Int
-    }
-    
-    struct Memo: Decodable {
-        var user_key: String
-        var lecture_code: String
-        var type: String
-        var title: String
-        var description: String
-        var date: String
-    }
+}
+
+struct Lectures: Decodable {
+    var Items: [Lecture]
+    var Count: Int
+    var ScannedCount: Int
+}
+
+struct Lecture: Decodable {
+    var code: String
+    var lecture: String
+    var professor: String
+    var location: String
+    var start_time: String
+    var end_time: String
+    var dayofweek: [String]
+}
+
+struct TimeTables: Decodable {
+    var Items: [TimeTable]
+    var Count: Int
+    var ScannedCount: Int
+}
+
+struct TimeTable: Decodable {
+    var lecture_code: String
+}
+
+struct Memos: Decodable {
+    var Items: [Memo]
+    var Count: Int
+    var ScannedCount: Int
+}
+
+struct Memo: Decodable {
+    var user_key: String
+    var lecture_code: String
+    var type: String
+    var title: String
+    var description: String
+    var date: String
 }
