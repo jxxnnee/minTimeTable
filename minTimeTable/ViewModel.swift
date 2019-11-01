@@ -21,34 +21,6 @@ class ViewModel {
     
     
     
-    // 이름을 기준으로 모든 강좌를 가져오는 함수
-    func getLecturesByName(_ name: String) {
-        let urlString = strURL + "/lectures?lecture=" + name
-        let encodingURL = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-        
-        guard let url = URL(string: encodingURL)
-            else {return}
-        
-        
-        Alamofire.request(url, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON {
-            (response) in
-            
-            if response.result.isSuccess {
-                
-                guard let data = response.data else {return}
-                
-                do {
-                    let lectures = try JSONDecoder().decode(Lectures.self, from: data)
-                    
-                    /* 처리 할 내용 */
-                }
-                catch let error {
-                    print("ERROR: \(error)")
-                    
-                }
-            }
-        }
-    }
     
     
     

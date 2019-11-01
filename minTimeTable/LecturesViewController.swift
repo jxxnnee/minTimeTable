@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 import Alamofire
 
-class LecturesViewController: UIViewController, UITableViewDelegate {
+class LecturesViewController: UIViewController, UITableViewDelegate, UISearchBarDelegate {
     
     let strURL = "https://k03c8j1o5a.execute-api.ap-northeast-2.amazonaws.com/v1/programmers"
     let headers = ["x-api-key": "QJuHAX8evMY24jvpHfHQ4pHGetlk5vn8FJbk70O6",
@@ -19,45 +19,30 @@ class LecturesViewController: UIViewController, UITableViewDelegate {
     
     let bag = DisposeBag()
     let viewmodel = ViewModel()
-    
-//    var lectures = [String]()
-//    var lectureCode = [String]()
-//    var professors = [String]()
-//    var locations = [String]()
-//    var startTimes = [String]()
-//    var endTimes = [String]()
-//    var dayofweeks = [[String]]()
     var lectureCount = 0
     
     let lectures: BehaviorRelay<[Lecture]> = BehaviorRelay(value: [])
-    
-    let soso = Observable.of(Lectures.self)
 
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var searchBar: UISearchBar!
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.rx
             .setDelegate(self)
             .disposed(by: bag)
         self.tableView.rowHeight = 160
-        //tableView.estimatedRowHeight = 5000
         getLectures()
         // Do any additional setup after loading the view.
     }
     
     override func viewDidAppear(_ animated: Bool) {
         bindTableView()
-        
+        observeSearchBar()
     }
     
 
     
     private func bindTableView() {
-        print("바인딩 시작...")
-//        let lectureOb: Observable<[String]> = Observable.of(lectures)
-//        print(lectures)
-        
-        
         lectures.bind(to: self.tableView.rx.items(cellIdentifier: "ListCell", cellType: LecturesViewCell.self)) { (row, element, cell) in
             cell.separatorInset = UIEdgeInsets.zero
             cell.lectureName.text = element.lecture
@@ -66,11 +51,33 @@ class LecturesViewController: UIViewController, UITableViewDelegate {
             cell.location.text = element.location
             cell.startTime.text = element.start_time
             cell.endTime.text = element.end_time
-            cell.dayOfWeek.text = "(" + element.dayofweek.joined(separator: "), (") + ")"
-            
-            
-            
+            cell.dayOfWeek.text = "(" + element.dayofweek.reversed().joined(separator: "), (") + ")"
             }.disposed(by: bag)
+        
+        
+    }
+    
+    private func observeSearchBar() {
+        self.searchBar
+            .rx.text
+            .orEmpty
+            .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
+            .distinctUntilChanged()
+            .filter({ !$0.isEmpty })
+            .subscribe(onNext: {
+                self.getLecturesByName($0)
+                DispatchQueue.main.async {
+                    self.tableView.reloadSections(IndexSet.init(integersIn: 0...0), with: UITableView.RowAnimation.automatic)                }
+            })
+            .disposed(by: bag)
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //let code: String
+        
+        if let cell = self.tableView.cellForRow(at: indexPath) as? LecturesViewCell {
+            print(cell.lectureName.text)
+        }
     }
     
     
@@ -89,11 +96,41 @@ class LecturesViewController: UIViewController, UITableViewDelegate {
                 do {
                     let lecture = try JSONDecoder().decode(Lectures.self, from: data)
 
-                    print("디코딩 성공")
                     self.lectures.accept(lecture.Items)
                 }
                 catch let error {
                     print("ERROR: \(error)")
+                }
+            }
+        }
+    }
+    
+    
+    // 이름을 기준으로 모든 강좌를 가져오는 함수
+    func getLecturesByName(_ name: String) {
+        let urlString = strURL + "/lectures?lecture=" + name
+        let encodingURL = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+        
+        guard let url = URL(string: encodingURL)
+            else {return}
+        
+        
+        Alamofire.request(url, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON {
+            (response) in
+            
+            if response.result.isSuccess {
+                
+                guard let data = response.data else {return}
+                
+                do {
+                    let lecture = try JSONDecoder().decode(Lectures.self, from: data)
+                    
+                    /* 처리 할 내용 */
+                    self.lectures.accept(lecture.Items)
+                }
+                catch let error {
+                    print("ERROR: \(error)")
+                    
                 }
             }
         }
