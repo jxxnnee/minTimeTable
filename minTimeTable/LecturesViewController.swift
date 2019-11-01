@@ -27,17 +27,16 @@ class LecturesViewController: UIViewController, UITableViewDelegate, UISearchBar
     @IBOutlet weak var searchBar: UISearchBar!
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.rx
-            .setDelegate(self)
-            .disposed(by: bag)
         self.tableView.rowHeight = 160
         getLectures()
+        bindTableView()
+        observeSearchBar()
         // Do any additional setup after loading the view.
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        bindTableView()
-        observeSearchBar()
+        self.tableView.reloadData()
+        self.tableView.tableFooterView = UIView(frame: CGRect.zero)
     }
     
 
@@ -76,8 +75,21 @@ class LecturesViewController: UIViewController, UITableViewDelegate, UISearchBar
         //let code: String
         
         if let cell = self.tableView.cellForRow(at: indexPath) as? LecturesViewCell {
-            print(cell.lectureName.text)
+            if let code = cell.lectureName.text {
+                performSegue(withIdentifier: "showLectureDetail", sender: code)
+            }
         }
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.showsCancelButton = true
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        getLectures()
+        self.searchBar.text = nil
+        self.searchBar.showsCancelButton = false
+        self.searchBar.endEditing(true)
     }
     
     
@@ -134,6 +146,12 @@ class LecturesViewController: UIViewController, UITableViewDelegate, UISearchBar
                 }
             }
         }
+    }
+    
+    //뷰 이동을 도와주는 함수
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let DetailVC = segue.destination as! LectureDetailViewController
+        DetailVC.name = sender as! String
     }
     
     
