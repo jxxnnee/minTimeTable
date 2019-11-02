@@ -9,5 +9,5 @@ target 'minTimeTable' do
 	pod 'Alamofire'
 	pod 'RxSwift'
 	pod 'RxCocoa'
-
+	pod 'RxDataSources'
 end

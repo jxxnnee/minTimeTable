@@ -11,30 +11,25 @@ import RxSwift
 import RxCocoa
 import Alamofire
 
-class LecturesViewController: UIViewController, UITableViewDelegate, UISearchBarDelegate {
-    
-    let strURL = "https://k03c8j1o5a.execute-api.ap-northeast-2.amazonaws.com/v1/programmers"
-    let headers = ["x-api-key": "QJuHAX8evMY24jvpHfHQ4pHGetlk5vn8FJbk70O6",
-                   "Content-Type": "application/json"]
+class LecturesViewController: UIViewController {
     
     let bag = DisposeBag()
-    let viewmodel = ViewModel()
-    var lectureCount = 0
-    
+    let datamodel = DataModel()
     let lectures: BehaviorRelay<[Lecture]> = BehaviorRelay(value: [])
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.rowHeight = 160
-        getLectures()
         bindTableView()
         observeSearchBar()
         // Do any additional setup after loading the view.
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        getLectures()
         self.tableView.reloadData()
         self.tableView.tableFooterView = UIView(frame: CGRect.zero)
     }
@@ -52,8 +47,6 @@ class LecturesViewController: UIViewController, UITableViewDelegate, UISearchBar
             cell.endTime.text = element.end_time
             cell.dayOfWeek.text = "(" + element.dayofweek.reversed().joined(separator: "), (") + ")"
             }.disposed(by: bag)
-        
-        
     }
     
     private func observeSearchBar() {
@@ -66,10 +59,27 @@ class LecturesViewController: UIViewController, UITableViewDelegate, UISearchBar
             .subscribe(onNext: {
                 self.getLecturesByName($0)
                 DispatchQueue.main.async {
-                    self.tableView.reloadSections(IndexSet.init(integersIn: 0...0), with: UITableView.RowAnimation.automatic)                }
+                    self.tableView.reloadSections(IndexSet.init(integersIn: 0...0), with: UITableView.RowAnimation.automatic)
+                }
             })
             .disposed(by: bag)
     }
+
+
+    /*
+    // MARK: - Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destination.
+        // Pass the selected object to the new view controller.
+    }
+    */
+
+}
+
+
+extension LecturesViewController: UITableViewDelegate, UISearchBarDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //let code: String
@@ -92,13 +102,22 @@ class LecturesViewController: UIViewController, UITableViewDelegate, UISearchBar
         self.searchBar.endEditing(true)
     }
     
+    //뷰 이동을 도와주는 함수
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let DetailVC = segue.destination as! LectureDetailViewController
+        DetailVC.name = sender as! String
+    }
+}
+
+
+extension LecturesViewController {
     
     // 모든 강좌를 가져오는 함수
     func getLectures() {
-        guard let url = URL(string: strURL + "/lectures")
+        guard let url = URL(string: DataModel.strURL + "/lectures")
             else {return}
         
-        Alamofire.request(url, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON {
+        Alamofire.request(url, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: DataModel.headers).responseJSON {
             (response) in
             
             if response.result.isSuccess {
@@ -107,7 +126,7 @@ class LecturesViewController: UIViewController, UITableViewDelegate, UISearchBar
                 
                 do {
                     let lecture = try JSONDecoder().decode(Lectures.self, from: data)
-
+                    
                     self.lectures.accept(lecture.Items)
                 }
                 catch let error {
@@ -120,14 +139,14 @@ class LecturesViewController: UIViewController, UITableViewDelegate, UISearchBar
     
     // 이름을 기준으로 모든 강좌를 가져오는 함수
     func getLecturesByName(_ name: String) {
-        let urlString = strURL + "/lectures?lecture=" + name
+        let urlString = DataModel.strURL + "/lectures?lecture=" + name
         let encodingURL = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         
         guard let url = URL(string: encodingURL)
             else {return}
         
         
-        Alamofire.request(url, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON {
+        Alamofire.request(url, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: DataModel.headers).responseJSON {
             (response) in
             
             if response.result.isSuccess {
@@ -147,23 +166,4 @@ class LecturesViewController: UIViewController, UITableViewDelegate, UISearchBar
             }
         }
     }
-    
-    //뷰 이동을 도와주는 함수
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let DetailVC = segue.destination as! LectureDetailViewController
-        DetailVC.name = sender as! String
-    }
-    
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

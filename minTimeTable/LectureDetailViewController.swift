@@ -13,9 +13,6 @@ import RxCocoa
 
 
 class LectureDetailViewController: UIViewController {
-    let strURL = "https://k03c8j1o5a.execute-api.ap-northeast-2.amazonaws.com/v1/programmers"
-    let headers = ["x-api-key": "QJuHAX8evMY24jvpHfHQ4pHGetlk5vn8FJbk70O6",
-                   "Content-Type": "application/json"]
 
     @IBOutlet weak var lectureName: UILabel!
     @IBOutlet weak var sTime: UILabel!
@@ -34,17 +31,30 @@ class LectureDetailViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
+    @IBAction func addLectureAtTimeTable(_ sender: UIButton) {
+        if let code = self.code.text {
+            postTimeTable(DataModel.userKEY, code: code)
+            DispatchQueue.main.async {
+                self.navigationController?.popViewController(animated: true)
+            }
+        }
+        else {
+            print("ERROR: 에러 발생")
+        }
+        
+    }
+
     
-    
+    //이름으로 강좌 정보를 가져오는 함수
     func getLecturesByName(_ name: String) {
-        let urlString = strURL + "/lectures?lecture=" + name
+        let urlString = DataModel.strURL + "/lectures?lecture=" + name
         let encodingURL = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         
         guard let url = URL(string: encodingURL)
             else {return}
         
         
-        Alamofire.request(url, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers).responseJSON {
+        Alamofire.request(url, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: DataModel.headers).responseJSON {
             (response) in
             
             if response.result.isSuccess {
@@ -53,9 +63,8 @@ class LectureDetailViewController: UIViewController {
                 
                 do {
                     let lecture = try JSONDecoder().decode(Lectures.self, from: data)
-                    
+        
                     let item = Observable.of(lecture)
-                    
                     item.subscribe(onNext: { element in
                             self.lectureName.text = element.Items.first?.lecture
                             self.code.text = element.Items.first?.code
@@ -73,12 +82,29 @@ class LectureDetailViewController: UIViewController {
                     
                 }
                 catch let error {
-                    print("ERROR: \(error)")
-                    
+                    print("ERROR: \(error)")  
                 }
             }
         }
     }
+    
+    
+    
+    // 시간표를 추가하는 함수
+    func postTimeTable(_ userkey: String, code: String) {
+        guard let url = URL(string: DataModel.strURL + "/timetable")
+            else {return}
+        
+        let param = [
+            "user_key":userkey,
+            "code":code
+        ]
+        
+        Alamofire.request(url, method: .post, parameters: param, encoding: JSONEncoding.default, headers: DataModel.headers)
+        
+    }
+    
+    
 
     /*
     // MARK: - Navigation

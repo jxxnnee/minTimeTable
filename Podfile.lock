@@ -1,8 +1,13 @@
 PODS:
   - Alamofire (4.9.0)
+  - Differentiator (4.0.1)
   - RxCocoa (5.0.0):
     - RxRelay (~> 5)
     - RxSwift (~> 5)
+  - RxDataSources (4.0.1):
+    - Differentiator (~> 4.0)
+    - RxCocoa (~> 5.0)
+    - RxSwift (~> 5.0)
   - RxRelay (5.0.0):
     - RxSwift (~> 5)
   - RxSwift (5.0.0)
@@ -10,21 +15,27 @@ PODS:
 DEPENDENCIES:
   - Alamofire
   - RxCocoa
+  - RxDataSources
   - RxSwift
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - Alamofire
     - RxCocoa
     - RxRelay
     - RxSwift
+  trunk:
+    - Differentiator
+    - RxDataSources
 
 SPEC CHECKSUMS:
   Alamofire: afc3e7c6db61476cb45cdd23fed06bad03bbc321
+  Differentiator: 886080237d9f87f322641dedbc5be257061b0602
   RxCocoa: fcf32050ac00d801f34a7f71d5e8e7f23026dcd8
+  RxDataSources: efee07fa4de48477eca0a4611e6d11e2da9c1114
   RxRelay: 4f7409406a51a55cd88483f21ed898c234d60f18
   RxSwift: 8b0671caa829a763bbce7271095859121cbd895f
 
-PODFILE CHECKSUM: c9b1c35aa3ff6d8db3b67a52f72411e858f75418
+PODFILE CHECKSUM: 563620089cf2b572c14e629b35fada002fc03d09
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.8.4
