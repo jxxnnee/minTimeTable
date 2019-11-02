@@ -67,7 +67,6 @@ extension ViewController: UITableViewDelegate {
             
             success(true)
             
-            
         })
         
         return UISwipeActionsConfiguration(actions: [deleteAction])

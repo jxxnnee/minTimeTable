@@ -24,6 +24,7 @@ class MyLectureDetailViewController: UIViewController {
     
     var memoDes: Dictionary<String, String> = Dictionary<String, String>()
     var memoDate: Dictionary<String, String> = Dictionary<String, String>()
+    var memoType: Dictionary<String, String> = Dictionary<String, String>()
     
     
     let bag = DisposeBag()
@@ -34,6 +35,7 @@ class MyLectureDetailViewController: UIViewController {
         super.viewDidLoad()
         self.getLecturesByName(name)
         self.bindTableView()
+        self.memoTableView.delegate = self
         // Do any additional setup after loading the view.
     }
     
@@ -46,7 +48,14 @@ class MyLectureDetailViewController: UIViewController {
     }
     
     @IBAction func addLectureMemo(_ sender: UIButton) {
-        performSegue(withIdentifier: "addToMemo", sender: nil)
+        if let code = self.code.text {
+            performSegue(withIdentifier: "addToMemo", sender: code)
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let AddMemoVC = segue.destination as! AddMemoViewController
+        AddMemoVC.code = (sender as! String)
     }
     
     private func bindTableView() {
@@ -55,6 +64,7 @@ class MyLectureDetailViewController: UIViewController {
             cell.title.text = element.title
             self.memoDes[element.title] = element.description
             self.memoDate[element.title] = element.date
+            self.memoType[element.title] = element.type
             
             }.disposed(by: bag)
     }
@@ -69,6 +79,34 @@ class MyLectureDetailViewController: UIViewController {
     }
     */
 
+}
+
+extension MyLectureDetailViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let deleteAction = UIContextualAction(style: .destructive, title:  "삭제", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
+            
+            // Call edit action
+            if let code = self.code.text {
+                if let cell = self.memoTableView.cellForRow(at: indexPath) as? MemoTableViewCell {
+                    if let title = cell.title.text {
+                        if let type = self.memoType[title] {
+                            self.deleteMemo(DataModel.userKEY, code: code, type: type)
+                        }
+                    }
+                }
+            }
+            
+            // Reset state
+            
+            success(true)
+            
+            
+        })
+        
+        return UISwipeActionsConfiguration(actions: [deleteAction])
+        
+    }
 }
 
 
@@ -143,4 +181,22 @@ extension MyLectureDetailViewController {
             }
         }
     }
+    
+    
+    
+    // 특정 메모를 삭제하는 함수
+    func deleteMemo(_ userkey: String, code: String, type: String) {
+        guard let url = URL(string: DataModel.strURL + "/memo")
+            else {return}
+        
+        let param = [
+            "user_key": userkey,
+            "code": code,
+            "type": type
+        ]
+        
+        Alamofire.request(url, method: .delete, parameters: param, encoding: JSONEncoding.default, headers: DataModel.headers)
+        
+    }
+    
 }

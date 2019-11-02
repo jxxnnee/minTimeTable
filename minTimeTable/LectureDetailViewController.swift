@@ -36,6 +36,7 @@ class LectureDetailViewController: UIViewController {
             postTimeTable(DataModel.userKEY, code: code)
             DispatchQueue.main.async {
                 self.navigationController?.popViewController(animated: true)
+                // 최상위 뷰를 pop 시켜서 닫아준다.
             }
         }
         else {

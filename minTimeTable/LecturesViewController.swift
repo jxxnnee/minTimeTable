@@ -85,8 +85,8 @@ extension LecturesViewController: UITableViewDelegate, UISearchBarDelegate {
         //let code: String
         
         if let cell = self.tableView.cellForRow(at: indexPath) as? LecturesViewCell {
-            if let code = cell.lectureName.text {
-                performSegue(withIdentifier: "showLectureDetail", sender: code)
+            if let name = cell.lectureName.text {
+                performSegue(withIdentifier: "showLectureDetail", sender: name)
             }
         }
     }

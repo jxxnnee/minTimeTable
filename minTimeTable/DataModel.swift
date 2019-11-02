@@ -43,39 +43,6 @@ class DataModel {
     }
     
     
-    // 특정 강좌에 메모를 추가하는 함수
-    func addMemo(_ userkey: String, code: String, type: String, title: String, description: String, date: String) {
-        guard let url = URL(string: DataModel.strURL + "/memo")
-            else {return}
-        
-        let param = [
-            "user_key": userkey,
-            "code": code,
-            "type": type,
-            "title": title,
-            "description": description,
-            "date": date
-        ]
-        
-        Alamofire.request(url, method: .post, parameters: param, encoding: JSONEncoding.default, headers: DataModel.headers)
-    }
-    
-    // 특정 메모를 삭제하는 함수
-    func deleteMemo(_ userkey: String, code: String, type: String) {
-        guard let url = URL(string: DataModel.strURL + "/memo")
-            else {return}
-        
-        let param = [
-            "user_key": userkey,
-            "code": code,
-            "type": type
-        ]
-        
-        Alamofire.request(url, method: .delete, parameters: param, encoding: JSONEncoding.default, headers: DataModel.headers)
-        
-    }
-    
-    
 }
 
 struct Lectures: Decodable {
@@ -117,5 +84,11 @@ struct Memo: Decodable {
     var title: String
     var description: String
     var date: String
+}
+
+struct ErrorStruct: Decodable {
+    var httpMethod: String
+    var message: String
+    var resource: String
 }
 
