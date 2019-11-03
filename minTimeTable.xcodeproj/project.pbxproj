@@ -13,6 +13,7 @@
 		877C9E5D236D8CC700E2BD98 /* MyLectureDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 877C9E5C236D8CC700E2BD98 /* MyLectureDetailViewController.swift */; };
 		877C9E61236DD3E400E2BD98 /* MemoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 877C9E60236DD3E400E2BD98 /* MemoTableViewCell.swift */; };
 		877C9E63236DE67600E2BD98 /* AddMemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 877C9E62236DE67600E2BD98 /* AddMemoViewController.swift */; };
+		877C9E65236EE7D700E2BD98 /* MemoDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 877C9E64236EE7D700E2BD98 /* MemoDetailViewController.swift */; };
 		879F67792369927C00CCDBD6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879F67782369927C00CCDBD6 /* AppDelegate.swift */; };
 		879F677B2369927C00CCDBD6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879F677A2369927C00CCDBD6 /* ViewController.swift */; };
 		879F677E2369927C00CCDBD6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 879F677C2369927C00CCDBD6 /* Main.storyboard */; };
@@ -32,6 +33,7 @@
 		877C9E5C236D8CC700E2BD98 /* MyLectureDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyLectureDetailViewController.swift; sourceTree = "<group>"; };
 		877C9E60236DD3E400E2BD98 /* MemoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoTableViewCell.swift; sourceTree = "<group>"; };
 		877C9E62236DE67600E2BD98 /* AddMemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMemoViewController.swift; sourceTree = "<group>"; };
+		877C9E64236EE7D700E2BD98 /* MemoDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoDetailViewController.swift; sourceTree = "<group>"; };
 		879F67752369927C00CCDBD6 /* minTimeTable.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = minTimeTable.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		879F67782369927C00CCDBD6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		879F677A2369927C00CCDBD6 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -95,20 +97,13 @@
 				877C9E5C236D8CC700E2BD98 /* MyLectureDetailViewController.swift */,
 				877C9E60236DD3E400E2BD98 /* MemoTableViewCell.swift */,
 				877C9E62236DE67600E2BD98 /* AddMemoViewController.swift */,
+				877C9E64236EE7D700E2BD98 /* MemoDetailViewController.swift */,
 				879F677F2369927F00CCDBD6 /* Assets.xcassets */,
 				879F67812369927F00CCDBD6 /* LaunchScreen.storyboard */,
 				879F67782369927C00CCDBD6 /* AppDelegate.swift */,
 				879F67842369927F00CCDBD6 /* Info.plist */,
-				879F678C236AE57F00CCDBD6 /* Supporting Files */,
 			);
 			path = minTimeTable;
-			sourceTree = "<group>";
-		};
-		879F678C236AE57F00CCDBD6 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		CEB3F081D978B5C5F40D417C /* Pods */ = {
@@ -237,6 +232,7 @@
 			files = (
 				877C9E5B236C600300E2BD98 /* TimeTableViewCell.swift in Sources */,
 				879F677B2369927C00CCDBD6 /* ViewController.swift in Sources */,
+				877C9E65236EE7D700E2BD98 /* MemoDetailViewController.swift in Sources */,
 				877C9E5D236D8CC700E2BD98 /* MyLectureDetailViewController.swift in Sources */,
 				879F6790236AF80300CCDBD6 /* LecturesViewCell.swift in Sources */,
 				877C9E61236DD3E400E2BD98 /* MemoTableViewCell.swift in Sources */,

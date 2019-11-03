@@ -21,12 +21,14 @@ class LectureDetailViewController: UIViewController {
     @IBOutlet weak var code: UILabel!
     @IBOutlet weak var professor: UILabel!
     @IBOutlet weak var location: UILabel!
+    @IBOutlet weak var lectureIntro: UITextView!
     
     let bag = DisposeBag()
     var name = "웹서버프로그래밍"
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.lectureIntro.isEditable = false
         getLecturesByName(name)
         // Do any additional setup after loading the view.
     }

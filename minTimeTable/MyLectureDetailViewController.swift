@@ -54,8 +54,20 @@ class MyLectureDetailViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let AddMemoVC = segue.destination as! AddMemoViewController
-        AddMemoVC.code = (sender as! String)
+        if segue.identifier == "addToMemo" {
+            let AddMemoVC = segue.destination as! AddMemoViewController
+            AddMemoVC.code = (sender as! String)
+        }
+        
+        if segue.identifier == "showMemoDetail" {
+            let detailMemoVC = segue.destination as! MemoDetailViewController
+            let title = sender as! String
+            
+            detailMemoVC.receivedTitle = title
+            detailMemoVC.receivedDes = memoDes[title]!
+            detailMemoVC.receivedDate = memoDate[title]!
+            detailMemoVC.receviedType = memoType[title]!
+        }
     }
     
     private func bindTableView() {
@@ -106,6 +118,14 @@ extension MyLectureDetailViewController: UITableViewDelegate {
         
         return UISwipeActionsConfiguration(actions: [deleteAction])
         
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let cell = self.memoTableView.cellForRow(at: indexPath) as? MemoTableViewCell {
+            if let title = cell.title.text {
+                performSegue(withIdentifier: "showMemoDetail", sender: title)
+            }
+        }
     }
 }
 

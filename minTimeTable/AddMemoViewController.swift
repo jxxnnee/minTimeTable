@@ -55,13 +55,18 @@ class AddMemoViewController: UIViewController {
         addMemo(DataModel.userKEY, code: self.code, type: type, title: title, description: des, date: dateString)
         
         
-        
-        DispatchQueue.main.async {
-//            self.navigationController?.popViewController(animated: true)
-            // 최상위 뷰를 pop 시켜서 닫아준다.
+        let time = DispatchTime.now() + .seconds(1)
+        DispatchQueue.main.asyncAfter(deadline: time) {
             if let message = self.errorStr?.message {
-                print("MESSAGE: ", message)
+                let errorAlert = UIAlertController(title: "메모 추가 실패", message: message, preferredStyle: UIAlertController.Style.alert)
+                let errorAction = UIAlertAction(title: "OK", style: .cancel, handler : nil )
+                errorAlert.addAction(errorAction)
+                
+                self.present(errorAlert, animated: true, completion: nil)
             }
+            
+            self.navigationController?.popViewController(animated: true)
+            // 최상위 뷰를 pop 시켜서 닫아준다.
         }
         
     }
